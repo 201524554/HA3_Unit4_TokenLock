@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity 0.8.10;
-import"./ERC-20.sol";
+import "./ERC-20.sol";
+import "./Lock.sol";
 
 contract SimpleToken is ERC20Interface, OwnerHelper {
     using SafeMath for uint256;
@@ -84,5 +85,38 @@ contract SimpleToken is ERC20Interface, OwnerHelper {
         require(currentAmount == _allowances[owner][spender], "ERC20: invalid currentAmount");
         _allowances[owner][spender] = amount;
         emit Approval(owner, spender, currentAmount, amount);
+    }
+
+        function isTokenLock(address from, address to) public view returns (bool lock) {
+        lock = false;
+
+        if(_tokenLock == true)
+        {
+             lock = true;
+        }
+
+        if(_personalTokenLock[from] == true || _personalTokenLock[to] == true) {
+             lock = true;
+        }
+    }
+
+    function removeTokenLock() onlyOwner public {
+        require(_tokenLock == true);
+        _tokenLock = false;
+    }
+    
+    function TokenLockUp() onlyOwner public{
+        require(_tokenLock == false);
+        _tokenLock = true;
+    }
+
+    function removePersonalTokenLock(address _who) onlyOwner public {
+        require(_personalTokenLock[_who] == true);
+        _personalTokenLock[_who] = false;
+    }
+
+    function PersonalTokenLockUp(address _who) onlyOwner public{
+        require(_personalTokenLock[_who] == true);
+        _personalTokenLock[_who] = true;
     }
 }
