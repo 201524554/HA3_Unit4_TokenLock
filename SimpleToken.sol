@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity 0.8.10;
 import "./ERC-20.sol";
-import "./Lock.sol";
 
 contract SimpleToken is ERC20Interface, OwnerHelper {
     using SafeMath for uint256;
@@ -116,7 +115,7 @@ contract SimpleToken is ERC20Interface, OwnerHelper {
     }
 
     function PersonalTokenLockUp(address _who) onlyOwner public{
-        require(_personalTokenLock[_who] == true);
+        require(_personalTokenLock[_who] == false);
         _personalTokenLock[_who] = true;
     }
 }
